@@ -1,69 +1,64 @@
-import { Schema, Types, model, type Document } from 'mongoose';
+const { Schema, model, Types } = require('mongoose');
 
-interface IAssignment extends Document {
-    assignmentId: Schema.Types.ObjectId,
-    name: string,
-    score: number
-}
-
-interface IStudent extends Document {
-    first: string,
-    last: string,
-    github: string,
-    assignments: Schema.Types.ObjectId[]
-}
-
-const assignmentSchema = new Schema<IAssignment>(
-    {
-        assignmentId: {
-            type: Schema.Types.ObjectId,
-            default: () => new Types.ObjectId(),
-        },
-        name: {
-            type: String,
-            required: true,
-            maxlength: 50,
-            minlength: 4,
-            default: 'Unnamed assignment',
-        },
-        score: {
-            type: Number,
-            required: true,
-            default: () => Math.floor(Math.random() * (100 - 70 + 1) + 70),
-        },
-    },
-    {
-        timestamps: true,
-        _id: false
-    }
-);
-
-const studentSchema = new Schema<IStudent>({
-    first: {
-        type: String,
-        required: true,
-        max_length: 50,
-    },
-    last: {
-        type: String,
-        required: true,
-        max_length: 50,
-    },
-    github: {
-        type: String,
-        required: true,
-        max_length: 50,
-    },
-    assignments: [assignmentSchema],
+// Reaction schema (nested within Thought)
+const reactionSchema = new Schema({
+  reactionId: {
+    type: Schema.Types.ObjectId,
+    default: () => new Types.ObjectId(),
+  },
+  reactionBody: {
+    type: String,
+    required: true,
+    maxlength: 280,
+  },
+  username: {
+    type: String,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    get: (timestamp) => new Date(timestamp).toLocaleDateString() // Getter to format date
+  }
 },
-    {
-        toJSON: {
-            getters: true,
-        },
-        timestamps: true
-    }
-);
+{
+  toJSON: {
+    getters: true,
+  },
+  id: false,
+});
 
-const Student = model('Student', studentSchema);
+// Define the Thought schema
+const thoughtSchema = new Schema({
+  thoughtText: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 280,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    get: (timestamp) => new Date(timestamp).toLocaleDateString() // Getter to format date
+  },
+  username: {
+    type: String,
+    required: true,
+  },
+  reactions: [reactionSchema],
+},
+{
+  toJSON: {
+    virtuals: true,
+    getters: true,
+  },
+  id: false,
+});
 
-export default Student;
+// Virtual for reaction count
+thoughtSchema.virtual('reactionCount').get(function() {
+  return this.reactions.length;
+});
+
+const Thought = model('Thought', thoughtSchema);
+module.exports = Thought;

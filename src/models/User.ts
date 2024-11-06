@@ -1,47 +1,43 @@
-import { Schema, model, type Document } from 'mongoose';
+const { Schema, model } = require('mongoose');
 
-interface ICourse extends Document {
-    name: string,
-    inPerson: boolean,
-    start: Date,
-    end: Date,
-    students: Schema.Types.ObjectId[]
-}
-
-const courseSchema = new Schema<ICourse>(
+// Define the User schema
+const userSchema = new Schema({
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+    trim: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+    match: [/.+@.+\..+/, 'Must match a valid email address'], // Validation for email format
+  },
+  thoughts: [
     {
-        name: {
-            type: String,
-            required: true,
-        },
-        inPerson: {
-            type: Boolean,
-            default: true,
-        },
-        start: {
-            type: Date,
-            default: Date.now(),
-        },
-        end: {
-            type: Date,
-            // Sets a default value of 12 weeks from now
-            default: () => new Date(+new Date() + 84 * 24 * 60 * 60 * 1000),
-        },
-        students: [
-            {
-                type: Schema.Types.ObjectId,
-                ref: 'student',
-            },
-        ],
+      type: Schema.Types.ObjectId,
+      ref: 'Thought',
     },
+  ],
+  friends: [
     {
-        toJSON: {
-            virtuals: true,
-        },
-        timestamps: true
+      type: Schema.Types.ObjectId,
+      ref: 'User', // Self-reference for user friends
     },
-);
+  ],
+},
+{
+  toJSON: {
+    virtuals: true,
+  },
+  id: false,
+});
 
-const Course = model<ICourse>('Course', courseSchema);
+// Virtual for friend count
+userSchema.virtual('friendCount').get(function() {
+  return this.friends.length;
+});
 
-export default Course;
+const User = model('User', userSchema);
+module.exports = User;
