@@ -1,6 +1,6 @@
 import db from '../config/connection.js';
 import { User, Thought } from '../models/index.js';
-import cleanDB from './cleanDB.js';
+import cleanDB from './socialNetwork_db.js';
 import { getRandomName, getRandomAssignments } from './data.js';
 
 try {
