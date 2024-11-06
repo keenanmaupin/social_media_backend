@@ -1,17 +1,17 @@
-import { Course, Student } from '../models/index.js';
+import { User, Thought } from '../models/index.js';
 
-const cleanDB = async (): Promise<void> => {
+const socialNetwork_db = async (): Promise<void> => {
   try {
-    await Course.deleteMany({});
-    console.log('Course collection cleaned.');
+    await User.deleteMany({});
+    console.log('User collection cleaned.');
 
-    await Student.deleteMany({});
-    console.log('Student collection cleaned.');
+    await Thought.deleteMany({});
+    console.log('Thought collection cleaned.');
 
   } catch (err) {
-    console.error('Error cleaning collections:', err);
+    console.error('Error!:', err);
     process.exit(1);
   }
 };
 
-export default cleanDB;
+export default socialNetwork_db;
