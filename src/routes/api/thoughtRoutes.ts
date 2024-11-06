@@ -1,23 +1,31 @@
-import { Router } from 'express';
-const router = Router();
+import express from 'express';
 import {
-  getAllThoughts,
-  getThoughtsById,
   createThought,
+  getAllThoughts,
+  getThoughtById,
   deleteThought,
-  addThought,
-} from '../../controllers/thoughtController.js';
+  addReaction,
+  removeReaction,
+} from '../../controllers/thoughtController';
 
-// /api/Thought
-router.route('/').get(getAllThought).post(createThought);
+const router = express.Router();
 
-// /api/Thought/:ThoughtId
-router.route('/:ThoughtId').get(getThoughtById).delete(deleteThought);
+// Route for creating a new thought
+router.post('/', createThought);
 
-// /api/Thought/:ThoughtId/assignments
-router.route('/:ThoughtId/assignments').post(addAssignment);
+// Route for getting all thoughts
+router.get('/', getAllThoughts);
 
-// /api/Thought/:ThoughtId/assignments/:assignmentId
-router.route('/:ThoughtId/assignments/:assignmentId').delete(removeAssignment);
+// Route for getting a single thought by ID
+router.get('/:thoughtId', getThoughtById);
 
-export { router as ThoughtRouter} ;
+// Route for deleting a thought by ID
+router.delete('/:thoughtId', deleteThought);
+
+// Route for adding a reaction to a thought
+router.post('/:thoughtId/reactions', addReaction);
+
+// Route for removing a reaction from a thought
+router.delete('/:thoughtId/reactions/:reactionId', removeReaction);
+
+export { router as thoughtRouter };

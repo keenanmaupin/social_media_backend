@@ -1,15 +1,7 @@
 import mongoose from 'mongoose';
-import User from './models/User';
-import Thought from './models/Thought';
+import User from '../models/User';
+import Thought from '../models/Thought';
 
-// Connect to MongoDB
-const mongoURI = 'mongodb://localhost:27017/social_network'; //! we still need to make the db!!!!
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('Connected to MongoDB'))
-.catch(error => console.error('Error connecting to MongoDB:', error));
 
 // Define seed data
 const seedUsers = [

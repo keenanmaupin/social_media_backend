@@ -1,17 +1,31 @@
 import express from 'express';
-import routes from './routes/index.js';
-import db from './config/connection.js';
+import mongoose from 'mongoose';
+import { thoughtRouter } from './routes/api/thoughtRoutes';
+import { userRouter } from './routes/api/userRoutes';
 
-await db();
-
-const PORT = process.env.PORT || 3001;
+// Initialize express app
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.urlencoded({ extended: true}));
+// Middleware to parse JSON requests
 app.use(express.json());
 
-app.use(routes);
+// Route setup
+app.use('/api/thoughts', thoughtRouter);
+app.use('/api/users', userRouter);
 
-app.listen(PORT, () => {
-  console.log(`API server running on port ${PORT}!`);
-});
+// MongoDB connection setup
+mongoose.connect('mongodb://localhost:27017/socialNetwork_db', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+  .then(() => {
+    console.log('Connected to MongoDB');
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+    process.exit(1);  // Exit process with failure code
+  });

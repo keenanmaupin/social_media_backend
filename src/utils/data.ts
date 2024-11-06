@@ -1,5 +1,3 @@
-// data.ts
-
 export const seedUsers = [
   {
     username: 'starski',
