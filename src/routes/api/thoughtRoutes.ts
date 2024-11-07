@@ -6,7 +6,7 @@ import {
   deleteThought,
   addReaction,
   removeReaction,
-} from '../../controllers/thoughtController';
+} from '../../controllers/thoughtController.js';
 
 const router = express.Router();
 

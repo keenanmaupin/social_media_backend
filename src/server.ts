@@ -1,8 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { thoughtRouter } from './routes/api/thoughtRoutes';
-import { userRouter } from './routes/api/userRoutes';
-
+import { thoughtRouter } from './routes/api/thoughtRoutes.js';
+import { userRouter } from './routes/api/userRoutes.js';
 // Initialize express app
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,5 +22,5 @@ mongoose.connect('mongodb://localhost:27017/socialNetwork_db')
     console.error('Error connecting to MongoDB:', error);
   });
   app.listen(PORT, () => {
-    console.log(`API server running on port ${PORT}!`);
+    console.log(`Finaly we are up and running on ${PORT}!`);
   });

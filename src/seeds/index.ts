@@ -1,49 +1,53 @@
+import User from '../models/User.js';
+import Thought from '../models/Thought.js';
+import clean_db from './clean_db.js';
 import db from '../config/connection.js';
-import { User, Thought } from '../models/index.js';
-import cleanDB from './clean_db.js';
-import { getRandomName, getRandomAssignments } from '../seeds/data.js';
 
-try {
-  await db();
-  await cleanDB();
+async function seedDatabase() {
+  try {
+    // Connect to the database
+    const connection = await db(); // Wait for the database connection
+    if (!connection.readyState) {
+      throw new Error("Database connection is not established. Seeding aborted.");
+    }
 
-  // Create empty array to hold the Thoughts
-  const Thoughts = [];
+    // Clean the database before seeding
+    await clean_db(); // Assuming this clears the DB
+    console.log('Database cleaned.');
 
-  // Loop 20 times -- add Thoughts to the Thoughts array
-  for (let i = 0; i < 20; i++) {
-    // Get some random assignment objects using a helper function that we imported from ./data
-    const assignments = getRandomAssignments(20);
+    // Seed users
+    const seedUsers = [
+      { username: 'starski', email: 'starski@example.com' },
+      { username: 'hutch', email: 'hutch@example.com' },
+    ];
 
-    const fullName = getRandomName();
-    const first = fullName.split(' ')[0];
-    const last = fullName.split(' ')[1];
-    const github = `${first}${Math.floor(Math.random() * (99 - 18 + 1) + 18)}`;
+    const createdUsers = await User.insertMany(seedUsers);
+    console.log(`Inserted ${createdUsers.length} users.`);
 
-    Thoughts.push({
-      first,
-      last,
-      github,
-      assignments,
-    });
+    // Seed thoughts
+    const seedThoughts = [
+      {
+        username: 'starski',
+        thoughtText: 'This is a thought from Starski.',
+        reactions: [{ reactionBody: 'Interesting thought!', username: 'hutch' }],
+      },
+      {
+        username: 'hutch',
+        thoughtText: 'This is a thought from Hutch.',
+        reactions: [{ reactionBody: 'Thanks, Starski!', username: 'starski' }],
+      },
+    ];
+
+    const createdThoughts = await Thought.insertMany(seedThoughts);
+    console.log(`Inserted ${createdThoughts.length} thoughts.`);
+
+    console.log('Database seeding completed successfully.');
+    process.exit(0);
+  } catch (error) {
+    console.error('ERROR seeding database:', error);
+    process.exit(1);
   }
-
-  // Add Thoughts to the collection and await the results
-  const ThoughtData = await Thought.create(Thoughts);
-
-  // Add Users to the collection and await the results
-  await User.create({
-    name: 'UCLA',
-    inPerson: false,
-    Thoughts: [...ThoughtData.map(({ _id }: { [key: string]: any }) => _id)],
-  });
-
-  // Log out the seed data to indicate what should appear in the database
-  console.table(Thoughts);
-  console.info('Seeding complete! 🌱');
-  process.exit(0);
-} catch (error) {
-  console.error('Error seeding database:', error);
-  process.exit(1);
 }
 
+// Run the seed function
+seedDatabase();

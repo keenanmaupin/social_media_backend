@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import Thought from '../models/Thought';
+import Thought from '../models/Thought.js';
 
 // Create a new thought
 export const createThought = async (req: Request, res: Response) => {
@@ -28,9 +28,9 @@ export async function getThoughtById(req: Request, res: Response) {
     if (!thought) {
       return res.status(404).json({ message: 'Thought not found' });
     }
-    res.json(thought);
+    return res.json(thought);
   } catch (error) {
-    res.status(500).json({ error: 'Error fetching thought', details: error });
+    return res.status(500).json({ error: 'Error fetching thought', details: error });
   }
 }
 
@@ -41,9 +41,9 @@ export async function deleteThought(req: Request, res: Response) {
     if (!thought) {
       return res.status(404).json({ message: 'Thought not found' });
     }
-    res.json({ message: 'Thought deleted successfully' });
+    return res.json({ message: 'Thought deleted successfully' });
   } catch (error) {
-    res.status(500).json({ error: 'Error deleting thought', details: error });
+    return res.status(500).json({ error: 'Error deleting thought', details: error });
   }
 }
 
@@ -56,9 +56,9 @@ export async function addReaction(req: Request, res: Response) {
     }
     thought.reactions.push(req.body);
     await thought.save();
-    res.status(201).json(thought);
+    return res.status(201).json(thought);
   } catch (error) {
-    res.status(400).json({ error: 'Error adding reaction', details: error });
+    return res.status(400).json({ error: 'Error adding reaction', details: error });
   }
 }
 
@@ -73,8 +73,8 @@ export async function removeReaction(req: Request, res: Response) {
       (reaction: { _id: { toString: () => string; }; }) => reaction._id.toString() !== req.params.reactionId
     );
     await thought.save();
-    res.json(thought);
+    return res.json(thought);
   } catch (error) {
-    res.status(400).json({ error: 'Error removing reaction', details: error });
+    return res.status(400).json({ error: 'Error removing reaction', details: error });
   }
 }

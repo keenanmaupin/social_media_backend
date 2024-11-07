@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import User from '../models/User';
+import User from '../models/User.js';
 
 // Create a new user
 export const createUser = async (req:Request, res:Response) => {
@@ -22,20 +22,20 @@ export const getAllUsers = async (_req:Request, res:Response) => {
 };
 
 // Get a single user by ID
-export const getUserById = async (req:Request, res:Response) => {
+export async function getUserById(req: Request, res: Response) {
   try {
     const user = await User.findById(req.params.userId).populate('friends thoughts');
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.json(user);
+    return res.json(user);
   } catch (error) {
-    res.status(500).json(error);
+    return res.status(500).json({ message: 'Error finding User' });
   }
-};
+}
 
 // Update a user by ID
-export const updateUser = async (req:Request, res:Response) => {
+export async function updateUser(req: Request, res: Response) {
   try {
     const user = await User.findByIdAndUpdate(req.params.userId, req.body, {
       new: true,
@@ -44,27 +44,28 @@ export const updateUser = async (req:Request, res:Response) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.json(user);
+    return res.json(user);
   } catch (error) {
-    res.status(400).json(error);
+    return res.status(400).json({ error: 'Error updating user', details: error });
   }
-};
+}
+
 
 // Delete a user by ID
-export const deleteUser = async (req:Request, res:Response) => {
+export async function deleteUser(req: Request, res: Response) {
   try {
     const user = await User.findByIdAndDelete(req.params.userId);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    res.json({ message: 'User deleted' });
+  return res.json({ message: 'User deleted' });
   } catch (error) {
-    res.status(500).json(error);
+  return res.status(500).json(error);
   }
-};
+}
 
 // Add a friend to a user
-export const addFriend = async (req:Request, res:Response) => {
+export async function addFriend(req: Request, res: Response) {
   try {
     const user = await User.findById(req.params.userId);
     const friend = await User.findById(req.params.friendId);
@@ -78,11 +79,11 @@ export const addFriend = async (req:Request, res:Response) => {
     friend.friends.push(user._id);
     await user.save();
     await friend.save();
-    res.json({ message: 'Friend added' });
+    return res.json({ message: 'Friend added' });
   } catch (error) {
-    res.status(400).json(error);
+    return res.status(400).json(error);
   }
-};
+}
 
 // Remove a friend from a user
 export const removeFriend = async (req:Request, res:Response) => {
@@ -96,8 +97,8 @@ export const removeFriend = async (req:Request, res:Response) => {
     friend.friends = friend.friends.filter((f: { toString: () => any; }) => f.toString() !== user._id.toString());
     await user.save();
     await friend.save();
-    res.json({ message: 'Friend removed' });
+    return res.json({ message: 'Friend removed' });
   } catch (error) {
-    res.status(400).json(error);
+    return res.status(400).json(error);
   }
 };
