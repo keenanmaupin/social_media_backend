@@ -70,7 +70,7 @@ export const removeReaction = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'Thought not found' });
     }
     thought.reactions = thought.reactions.filter(
-      (reaction) => reaction._id.toString() !== req.params.reactionId
+      (reaction: { _id: { toString: () => string; }; }) => reaction._id.toString() !== req.params.reactionId
     );
     await thought.save();
     res.json(thought);

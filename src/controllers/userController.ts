@@ -1,7 +1,8 @@
+import { Request, Response } from 'express';
 import User from '../models/User';
 
 // Create a new user
-export const createUser = async (req, res) => {
+export const createUser = async (req:Request, res:Response) => {
   try {
     const user = await User.create(req.body);
     res.status(201).json(user);
@@ -11,7 +12,7 @@ export const createUser = async (req, res) => {
 };
 
 // Get all users
-export const getAllUsers = async (req, res) => {
+export const getAllUsers = async (_req:Request, res:Response) => {
   try {
     const users = await User.find().populate('friends thoughts');
     res.json(users);
@@ -21,7 +22,7 @@ export const getAllUsers = async (req, res) => {
 };
 
 // Get a single user by ID
-export const getUserById = async (req, res) => {
+export const getUserById = async (req:Request, res:Response) => {
   try {
     const user = await User.findById(req.params.userId).populate('friends thoughts');
     if (!user) {
@@ -34,7 +35,7 @@ export const getUserById = async (req, res) => {
 };
 
 // Update a user by ID
-export const updateUser = async (req, res) => {
+export const updateUser = async (req:Request, res:Response) => {
   try {
     const user = await User.findByIdAndUpdate(req.params.userId, req.body, {
       new: true,
@@ -50,7 +51,7 @@ export const updateUser = async (req, res) => {
 };
 
 // Delete a user by ID
-export const deleteUser = async (req, res) => {
+export const deleteUser = async (req:Request, res:Response) => {
   try {
     const user = await User.findByIdAndDelete(req.params.userId);
     if (!user) {
@@ -63,7 +64,7 @@ export const deleteUser = async (req, res) => {
 };
 
 // Add a friend to a user
-export const addFriend = async (req, res) => {
+export const addFriend = async (req:Request, res:Response) => {
   try {
     const user = await User.findById(req.params.userId);
     const friend = await User.findById(req.params.friendId);
@@ -84,15 +85,15 @@ export const addFriend = async (req, res) => {
 };
 
 // Remove a friend from a user
-export const removeFriend = async (req, res) => {
+export const removeFriend = async (req:Request, res:Response) => {
   try {
     const user = await User.findById(req.params.userId);
     const friend = await User.findById(req.params.friendId);
     if (!user || !friend) {
       return res.status(404).json({ message: 'User or friend not found' });
     }
-    user.friends = user.friends.filter((f) => f.toString() !== friend._id.toString());
-    friend.friends = friend.friends.filter((f) => f.toString() !== user._id.toString());
+    user.friends = user.friends.filter((f: { toString: () => any; }) => f.toString() !== friend._id.toString());
+    friend.friends = friend.friends.filter((f: { toString: () => any; }) => f.toString() !== user._id.toString());
     await user.save();
     await friend.save();
     res.json({ message: 'Friend removed' });

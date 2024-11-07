@@ -1,7 +1,7 @@
 import db from '../config/connection.js';
 import { User, Thought } from '../models/index.js';
-import cleanDB from './socialNetwork_db.js';
-import { getRandomName, getRandomAssignments } from './data.js';
+import cleanDB from './clean_db.js';
+import { getRandomName, getRandomAssignments } from '../seeds/data.js';
 
 try {
   await db();
