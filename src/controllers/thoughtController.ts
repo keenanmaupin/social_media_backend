@@ -22,7 +22,7 @@ export const getAllThoughts = async (_req: Request, res: Response) => {
 };
 
 // Get a single thought by ID
-export const getThoughtById = async (req: Request, res: Response) => {
+export async function getThoughtById(req: Request, res: Response) {
   try {
     const thought = await Thought.findById(req.params.thoughtId);
     if (!thought) {
@@ -32,10 +32,10 @@ export const getThoughtById = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ error: 'Error fetching thought', details: error });
   }
-};
+}
 
 // Delete a thought by ID
-export const deleteThought = async (req: Request, res: Response) => {
+export async function deleteThought(req: Request, res: Response) {
   try {
     const thought = await Thought.findByIdAndDelete(req.params.thoughtId);
     if (!thought) {
@@ -45,10 +45,10 @@ export const deleteThought = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ error: 'Error deleting thought', details: error });
   }
-};
+}
 
 // Add a reaction to a thought
-export const addReaction = async (req: Request, res: Response) => {
+export async function addReaction(req: Request, res: Response) {
   try {
     const thought = await Thought.findById(req.params.thoughtId);
     if (!thought) {
@@ -60,16 +60,16 @@ export const addReaction = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({ error: 'Error adding reaction', details: error });
   }
-};
+}
 
 // Remove a reaction from a thought
-export const removeReaction = async (req: Request, res: Response) => {
+export async function removeReaction(req: Request, res: Response) {
   try {
     const thought = await Thought.findById(req.params.thoughtId);
     if (!thought) {
       return res.status(404).json({ message: 'Thought not found' });
     }
-    thought.reactions = thought.reactions.filter(
+    thought.reactions.filter(
       (reaction: { _id: { toString: () => string; }; }) => reaction._id.toString() !== req.params.reactionId
     );
     await thought.save();
@@ -77,4 +77,4 @@ export const removeReaction = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).json({ error: 'Error removing reaction', details: error });
   }
-};
+}

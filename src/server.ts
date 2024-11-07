@@ -14,18 +14,14 @@ app.use(express.json());
 app.use('/api/thoughts', thoughtRouter);
 app.use('/api/users', userRouter);
 
-// MongoDB connection setup
-mongoose.connect('mongodb://localhost:27017/socialNetwork_db', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/socialNetwork_db')
   .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
+    console.log('Connected to the MongoDB database!');
   })
   .catch((error) => {
     console.error('Error connecting to MongoDB:', error);
-    process.exit(1);  // Exit process with failure code
+  });
+  app.listen(PORT, () => {
+    console.log(`API server running on port ${PORT}!`);
   });
