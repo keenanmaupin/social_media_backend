@@ -49,5 +49,5 @@ async function seedDatabase() {
   }
 }
 
-// Run the seed function
+// npm run seed 
 seedDatabase();

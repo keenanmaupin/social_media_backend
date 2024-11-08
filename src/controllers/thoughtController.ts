@@ -11,6 +11,21 @@ export const createThought = async (req: Request, res: Response) => {
   }
 };
 
+// Update a thought by ID
+export async function updateThought(req: Request, res: Response) {
+  try {
+    const thought = await Thought.findByIdAndUpdate(req.params.userId, req.body, {
+      new: true,
+      runValidators: true,
+    });
+    if (!thought) {
+      return res.status(404).json({ message: 'Thought not found' });
+    }
+    return res.json(thought);
+  } catch (error) {
+    return res.status(400).json({ error: 'Error updating thought', details: error });
+  }
+};
 // Get all thoughts
 export const getAllThoughts = async (_req: Request, res: Response) => {
   try {

@@ -6,6 +6,7 @@ import {
   deleteThought,
   addReaction,
   removeReaction,
+  updateThought,
 } from '../../controllers/thoughtController.js';
 
 const router = express.Router();
@@ -18,6 +19,9 @@ router.get('/', getAllThoughts);
 
 // Route for getting a single thought by ID
 router.get('/:thoughtId', getThoughtById);
+
+// Route for updating a thought by ID
+router.put('/:userId', updateThought);
 
 // Route for deleting a thought by ID
 router.delete('/:thoughtId', deleteThought);

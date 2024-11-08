@@ -28,7 +28,7 @@
 
 - [Questions](#questions)
 
-- [ADD SECTION HERE IF NEEDED .yw](#add-section-here-if-needed-yw)
+- [ADD SECTION](#add-section)
 
 -------------------------------------------------------
 ## License
@@ -65,8 +65,9 @@
 ## Testing
 - 🧪VIDEO DEMO 
 
-## ADD SECTION HERE IF NEEDED .yw
-
+## ADD SECTION
+- DEMO VIDEO: https://drive.google.com/file/d/1d7eonLv-u4Xkbkc_07Jf8qAxj1z8VVmS/view?usp=sharing 
+- GitHub URL: https://github.com/keenanmaupin/social_media_backend
 ## Questions
 - 🖍️[GitHub]🖍️: keenanmaupin
 - https://github.com/keenanmaupin
